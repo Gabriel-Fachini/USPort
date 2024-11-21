@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+cx_Oracle
+pydantic
+pydantic_settings
