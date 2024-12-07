@@ -78,3 +78,6 @@ def delete_item(item_id: int):
             raise HTTPException(status_code=404, detail="Item não encontrado")
         conn.commit()
         return {"message": "Item deletado com sucesso"}
+
+#USUÁRIO
+@APP.post
