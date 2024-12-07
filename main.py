@@ -3,6 +3,7 @@ from pydantic import BaseModel
 import cx_Oracle
 from typing import Optional
 from config import settings
+from schemas import Usuario
 
 # Modelo de dados
 class Item(BaseModel):
@@ -79,5 +80,44 @@ def delete_item(item_id: int):
         conn.commit()
         return {"message": "Item deletado com sucesso"}
 
-#USUÁRIO
-@APP.post
+# Usuários
+@app.post("/create_user")
+def create_user(user: Usuario):
+    try:       
+        print(user)
+        # with get_connection() as conn:
+        #     print(user)
+            # cursor = conn.cursor()
+            # # Verificar duplicação
+            # cursor.execute("SELECT COUNT(*) FROM users WHERE nusp = :nusp OR username = :username", {
+            #     'nusp': user.nusp,
+            #     'username': user.username
+            # })
+
+            # if cursor.fetchone()[0] > 0:
+            #     raise HTTPException(status_code=400, detail="Username or NUSP already exists.")
+            
+            # # Inserir usuário
+            # cursor.execute(
+            # """
+            #     INSERT INTO Usuario (username, nome, email, telefone, tipo, num_seguidores, num_seguindo, nusp)
+            #     VALUES (:username, :nome, :email, :telefone, :tipo, :num_seguidores, :num_seguindo, :nusp)
+            # """, {
+            #     'username': user.username,
+            #     'nome': user.nome,
+            #     'email': user.email,
+            #     'telefone': user.telefone,
+            #     'tipo': user.tipo,
+            #     'num_seguidores': user.num_seguidores,
+            #     'num_seguindo': user.num_seguindo,
+            #     'nusp': user.nusp
+            # })
+            # conn.commit()
+
+    except cx_Oracle.DatabaseError as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    # finally:
+    #     cursor.close()
+    #     conn.close()
+
+    return {"message": "Usuário criado com sucesso!"}

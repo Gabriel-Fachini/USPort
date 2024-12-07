@@ -1,16 +1,22 @@
-from pydantic import BaseModel, Field, constr, field_validator
+from pydantic import BaseModel, EmailStr, Field, constr, field_validator
 from typing import Optional, List
 from datetime import date
 
 class Usuario(BaseModel):
-    username: str = constr(max_length=50)
-    nusp: int = Field(..., ge=0, le=99999999)
+    username: str
+    nome: str
+    email: EmailStr
+    telefone: str
+    tipo: str
+    num_seguidores: Optional[int] = 0
+    num_seguindo: Optional[int] = 0
+    nusp: int = None
 
 class Atletica(BaseModel):
     username: str = constr(max_length=50)
     nusp: int = Field(..., ge=0, le=99999999)
     atletica: str = constr(max_length=50)
-    cnpj: str = constr(regex=r'^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$')
+    cnpj: str = constr(pattern=r'^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$')
     razao_social: str = constr(max_length=100)
     nome_fantasia: str = constr(max_length=100)
 

@@ -89,15 +89,6 @@ CREATE TABLE Membros_Atletica (
   CONSTRAINT chk_data_saida CHECK (data_saida IS NULL OR data_entrada < data_saida)
 );
 
-CREATE TABLE Participacao (
-  username VARCHAR2(50) NOT NULL,
-  nome_evento VARCHAR2(100) NOT NULL,
-  data DATE NOT NULL,
-  PRIMARY KEY (username, nome_evento, data),
-  FOREIGN KEY (username) REFERENCES Usuario(username),
-  FOREIGN KEY (nome_evento, data) REFERENCES Evento(nome, data)
-);
-
 -- Podemos ver quais esportes o evento contempla selecionando as atividades do evento
 CREATE TABLE Evento (
   nome VARCHAR2(100) NOT NULL,
@@ -113,6 +104,15 @@ CREATE TABLE Evento (
   CONSTRAINT chk_data_fim CHECK (data_fim IS NULL OR data_inicio <= data_fim),
   CONSTRAINT chk_data_inicio CHECK (data_inicio IS NULL OR data_inicio >= data)
   CONSTRAINT chk_ativo CHECK (ativo IN (0, 1))
+);
+
+CREATE TABLE Participacao (
+  username VARCHAR2(50) NOT NULL,
+  nome_evento VARCHAR2(100) NOT NULL,
+  data DATE NOT NULL,
+  PRIMARY KEY (username, nome_evento, data),
+  FOREIGN KEY (username) REFERENCES Usuario(username),
+  FOREIGN KEY (nome_evento, data) REFERENCES Evento(nome, data)
 );
 
 CREATE TABLE Trofeu (
