@@ -1,123 +1,97 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import cx_Oracle
-from typing import Optional
-from config import settings
+from InquirerPy import inquirer
+from InquirerPy.validator import EmptyInputValidator
 from schemas import Usuario
+from controllers import criar_usuario
+from pydantic import ValidationError
 
-# Modelo de dados
-class Item(BaseModel):
-    id: Optional[int] = None
-    nome: str
-    descricao: str
+def main():
+    while True:
+        # Definir as opções do menu
+        options = [
+            "Cadastrar Novo Usuário",
+            "Funcionalidade 2",
+            "Funcionalidade 3",
+            "Funcionalidade 4",
+            "Sair"
+        ]
 
-# Configuração da API
-app = FastAPI(
-    title=settings.app_name,
-    debug=settings.debug
-)
+        # Criar o prompt de seleção
+        result = inquirer.select(
+            message="Selecione uma opção:",
+            choices=options,
+            default=None,
+            instruction="Use as setas do teclado para navegar e pressione Enter para selecionar.",
+        ).execute()
 
-# Configuração do banco
-DB_CONFIG = {
-    'user': settings.db_user,
-    'password': settings.db_password,
-    'dsn': settings.db_dsn
-}
+        if result == "Sair":
+            print("Encerrando a aplicação...")
+            break
+        elif result == "Cadastrar Novo Usuário":
+            print("\n--- Cadastro de Novo Usuário ---\n")
+            try:
+                # Coletar dados do usuário
+                username = inquirer.text(
+                    message="Digite o username:",
+                    validate=EmptyInputValidator(),
+                ).execute()
+                
+                nome = inquirer.text(
+                    message="Digite seu nome:",
+                    validate=EmptyInputValidator(),
+                ).execute()
+                
+                email = inquirer.text(
+                    message="Digite seu email:",
+                    validate=EmptyInputValidator(),
+                ).execute()
+                
+                telefone = inquirer.text(
+                    message="Digite seu telefone (formato: (XX) XXXXX-XXXX):",
+                    validate=EmptyInputValidator(),
+                ).execute()
+                
+                tipo = inquirer.select(
+                    message="Selecione o tipo de usuário:",
+                    choices=["aluno", "atletica"],
+                    default="aluno",
+                    instruction="Use as setas do teclado para navegar e pressione Enter para selecionar.",
+                ).execute()
 
-# Função para conectar ao banco
-def get_connection():
-    try:
-        connection = cx_Oracle.connect(**DB_CONFIG)
-        return connection
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erro de conexão: {str(e)}")
+                # Criar instância do usuário com validação
+                usuario = Usuario(
+                    username=username,
+                    nome=nome,
+                    email=email,
+                    telefone=telefone,
+                    tipo=tipo,
+                    num_seguidores=0,  # Padrão
+                    num_seguindo=0      # Padrão
+                )
 
-# CRUD Endpoints
-@app.get("/items/{item_id}")
-def read_item(item_id: int):
-    with get_connection() as conn:
-        cursor = conn.cursor()
-        query = "SELECT id, nome, descricao FROM items WHERE id = :1"
-        cursor.execute(query, [item_id])
-        result = cursor.fetchone()
-        
-        if result:
-            return {"id": result[0], "nome": result[1], "descricao": result[2]}
-        raise HTTPException(status_code=404, detail="Item não encontrado")
+                # Chamar a função para criar usuário no banco de dados
+                resposta = criar_usuario(usuario)
+                print(f"\n{resposta['mensagem']}\n")
 
-@app.post("/items/")
-def create_item(item: Item):
-    with get_connection() as conn:
-        cursor = conn.cursor()
-        query = "INSERT INTO items (nome, descricao) VALUES (:1, :2) RETURNING id INTO :3"
-        id_var = cursor.var(cx_Oracle.NUMBER)
-        cursor.execute(query, [item.nome, item.descricao, id_var])
-        conn.commit()
-        
-        return {"id": id_var.getvalue()[0], "nome": item.nome, "descricao": item.descricao}
+            except ValidationError as ve:
+                # Erros de validação do Pydantic
+                print("\nErro de validação:")
+                for erro in ve.errors():
+                    print(f"{erro['loc'][0]}: {erro['msg']}")
+            except ValueError as ve:
+                # Erros de negócios, como username ou email duplicados
+                print(f"\nErro: {ve}")
+            except Exception as e:
+                # Erros gerais
+                print(f"\nOcorreu um erro ao criar o usuário: {e}")
+        elif result == "Funcionalidade 2":
+            print("\nVocê selecionou a Funcionalidade 2.\n")
+            # Implemente a funcionalidade 2 aqui
+        elif result == "Funcionalidade 3":
+            print("\nVocê selecionou a Funcionalidade 3.\n")
+            # Implemente a funcionalidade 3 aqui
+        elif result == "Funcionalidade 4":
+            print("\nVocê selecionou a Funcionalidade 4.\n")
+            # Implemente a funcionalidade 4 aqui
 
-@app.put("/items/{item_id}")
-def update_item(item_id: int, item: Item):
-    with get_connection() as conn:
-        cursor = conn.cursor()
-        query = "UPDATE items SET nome = :1, descricao = :2 WHERE id = :3"
-        cursor.execute(query, [item.nome, item.descricao, item_id])
-        
-        if cursor.rowcount == 0:
-            raise HTTPException(status_code=404, detail="Item não encontrado")
-        conn.commit()
-        return {"id": item_id, "nome": item.nome, "descricao": item.descricao}
-
-@app.delete("/items/{item_id}")
-def delete_item(item_id: int):
-    with get_connection() as conn:
-        cursor = conn.cursor()
-        query = "DELETE FROM items WHERE id = :1"
-        cursor.execute(query, [item_id])
-        
-        if cursor.rowcount == 0:
-            raise HTTPException(status_code=404, detail="Item não encontrado")
-        conn.commit()
-        return {"message": "Item deletado com sucesso"}
-
-# Usuários
-@app.post("/create_user")
-def create_user(user: Usuario):
-    try:       
-        print(user)
-        # with get_connection() as conn:
-        #     print(user)
-            # cursor = conn.cursor()
-            # # Verificar duplicação
-            # cursor.execute("SELECT COUNT(*) FROM users WHERE nusp = :nusp OR username = :username", {
-            #     'nusp': user.nusp,
-            #     'username': user.username
-            # })
-
-            # if cursor.fetchone()[0] > 0:
-            #     raise HTTPException(status_code=400, detail="Username or NUSP already exists.")
-            
-            # # Inserir usuário
-            # cursor.execute(
-            # """
-            #     INSERT INTO Usuario (username, nome, email, telefone, tipo, num_seguidores, num_seguindo, nusp)
-            #     VALUES (:username, :nome, :email, :telefone, :tipo, :num_seguidores, :num_seguindo, :nusp)
-            # """, {
-            #     'username': user.username,
-            #     'nome': user.nome,
-            #     'email': user.email,
-            #     'telefone': user.telefone,
-            #     'tipo': user.tipo,
-            #     'num_seguidores': user.num_seguidores,
-            #     'num_seguindo': user.num_seguindo,
-            #     'nusp': user.nusp
-            # })
-            # conn.commit()
-
-    except cx_Oracle.DatabaseError as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    # finally:
-    #     cursor.close()
-    #     conn.close()
-
-    return {"message": "Usuário criado com sucesso!"}
+if __name__ == "__main__":
+    main()

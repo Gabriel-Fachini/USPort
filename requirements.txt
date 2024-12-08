@@ -1,6 +1,7 @@
-fastapi
 uvicorn
-cx_Oracle
 pydantic
 pydantic_settings
 pydantic[email]
+colorama
+InquirerPy
+psycopg2

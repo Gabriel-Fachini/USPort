@@ -37,6 +37,7 @@ A API pode ser configurada de três maneiras:
 
 1. Python 3.x instalado
 2. Microsoft Visual C++ Build Tools
+3. <a href="https://www.oracle.com/database/technologies/instant-client/downloads.html">Oracle Client Library</a>
 
 ## Rodando a Aplicação
 Execute o comando:
