@@ -43,9 +43,27 @@ async def listar_eventos_atletica(nome_atletica: str) -> Dict:
                 "ativo": evento[6]
               })
           
+          # Obter número de membros da atlética
+          cursor.execute('''
+            SELECT a.username AS atletica, COUNT(DISTINCT m.username1) AS total_membros
+            FROM Atletica a
+            LEFT JOIN Membros_Atletica m ON a.username = m.username2
+            WHERE a.username ILIKE %s
+            GROUP BY a.username
+          ''', (f'%{nome_atletica}%',))
+          
+          num_membros = cursor.fetchone()
+          if num_membros is None:
+            num_membros = 0
+          else:
+            num_membros = num_membros[0]
+
           return {
               "status": "success",
-              "data": eventos_formatados
+              "data": {
+                "eventos": eventos_formatados,
+                "total_membros": 1
+              }
           }
 
   except ConexaoErro as ce:

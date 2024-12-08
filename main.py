@@ -172,10 +172,10 @@ def main():
 
                 # Obter eventos da atlética
                 eventos = run(listar_eventos_atletica(atletica))
-                resultado = exibir_eventos(eventos)
 
                 # Criar uma lista de opções para o usuário escolher
-                opcoes_eventos = [f"{evento['nome']} ({evento['data']})" for evento in eventos['data']]
+                print(Fore.BLUE + f"{atletica} tem {eventos['data']['total_membros']} membros.")
+                opcoes_eventos = [f"{evento['nome']} ({evento['data']})" for evento in eventos['data']['eventos']]
                 opcoes_eventos.append("Voltar ao Menu Principal")
                 
                 # Criar o prompt de seleção
