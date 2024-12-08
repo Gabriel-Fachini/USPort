@@ -1,9 +1,0 @@
-Usuário 
-1. Cadastrar novo usuário (POST)
-2. Obter dados do usuário pelo nome ou email (GET)
-3. Atualizar o nome ou alguma info do Usuario (UPDATE) PUT
-
-
-4. Criar evento com atividades (POST) - atividades (POST)
-5. Entrar no evento (POST) - tabela Participacao
-

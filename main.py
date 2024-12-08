@@ -115,7 +115,7 @@ def main():
                     ).execute()
                     
                     cnpj = inquirer.text(
-                        message="Digite o CNPJ:",
+                        message="Digite o CNPJ: (formato: XX.XXX.XXX/XXXX-XX)",
                         validate=EmptyInputValidator(),
                     ).execute()
                     
