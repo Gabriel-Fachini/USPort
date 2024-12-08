@@ -1,8 +1,6 @@
-from app.schemas import Usuario
 from typing import Dict
 from app.database import get_connection, ConexaoErro
-from asyncio import run
-from colorama import init, Fore, Style
+from colorama import init, Fore
 
 # Inicializa o colorama
 init(autoreset=True)
@@ -23,7 +21,6 @@ async def listar_eventos_atletica(nome_atletica: str) -> Dict:
           cursor.execute('''
               SELECT e.nome, e.data, e.data_inicio, e.data_fim, e.descricao, e.arquivo, e.ativo
               FROM Evento e
-              JOIN Usuario u ON e.username = u.username
               JOIN Atletica a ON u.username = a.username
               WHERE a.atletica ILIKE %s;
           ''', (f'%{nome_atletica}%',))
@@ -75,9 +72,3 @@ async def listar_eventos_atletica(nome_atletica: str) -> Dict:
   except ValueError as e:
     print(Fore.RED + e)
     raise e
-
-if __name__ == "__main__":
-  # Exemplo de uso
-  novo_usuario = Usuario(username="user6", nome="Carlos Pereira", email="carlos.pereira@example.com", telefone="(61) 98765-4321", tipo="aluno", num_seguidores=0, num_seguindo=0)
-  resultado = run(listar_eventos_atletica()(novo_usuario))
-  print(resultado)

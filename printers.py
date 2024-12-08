@@ -1,5 +1,4 @@
-from colorama import init, Fore, Style
-from InquirerPy import inquirer
+from colorama import init, Fore
 
 def exibir_feed(feed_data):
     if feed_data["status"] == "success":
@@ -20,7 +19,7 @@ def exibir_feed(feed_data):
 
 def exibir_eventos(eventos_data):
     if eventos_data["status"] == "success":
-        eventos = eventos_data["data"]
+        eventos = eventos_data["data"]["eventos"]
         if not eventos:
             print(Fore.YELLOW + "Nenhum evento encontrado.")
             return

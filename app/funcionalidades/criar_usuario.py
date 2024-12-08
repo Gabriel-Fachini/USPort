@@ -1,8 +1,7 @@
 from app.schemas import Usuario
 from typing import Dict
 from app.database import get_connection, ConexaoErro
-from asyncio import run
-from colorama import init, Fore, Style
+from colorama import init
 
 # Inicializa o colorama
 init(autoreset=True)
@@ -55,9 +54,3 @@ async def criar_usuario(user: Usuario) -> Dict:
   except Exception as e:
     # Outros erros
     raise e
-
-if __name__ == "__main__":
-  # Exemplo de uso
-  novo_usuario = Usuario(username="user6", nome="Carlos Pereira", email="carlos.pereira@example.com", telefone="(61) 98765-4321", tipo="aluno", num_seguidores=0, num_seguindo=0)
-  resultado = run(criar_usuario(novo_usuario))
-  print(resultado)

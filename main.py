@@ -1,18 +1,25 @@
 from InquirerPy import inquirer
 from InquirerPy.validator import EmptyInputValidator
-from app.funcionalidades.criar_aluno import criar_aluno
-from app.funcionalidades.criar_atletica import criar_atletica
-from app.funcionalidades.listar_estatisticas import listar_estatisticas
-from app.schemas import Aluno, Atletica, Usuario
-from app.funcionalidades.criar_usuario import criar_usuario
-from app.funcionalidades.feed_personalizado import feed_personalizado
-from app.funcionalidades.listar_eventos_atletica import listar_eventos_atletica
-from app.funcionalidades.inscrever_usuario_evento import inscrever_usuario_evento
-from app.funcionalidades.listar_participacoes_comuns import listar_participacoes_comuns
+from app.funcionalidades import (
+    criar_aluno,
+    criar_atletica,
+    listar_estatisticas,
+    criar_usuario,
+    feed_personalizado,
+    listar_eventos_atletica,
+    inscrever_usuario_evento,
+    listar_participacoes_comuns
+)
 from pydantic import ValidationError
 from asyncio import run
-from colorama import init, Fore, Style
-from printers import exibir_feed, exibir_eventos, exibir_estatisticas, exibir_participacoes_comuns
+from colorama import Fore, Style
+from printers import (
+    exibir_feed, 
+    exibir_eventos, 
+    exibir_estatisticas, 
+    exibir_participacoes_comuns
+)
+from app.schemas import Aluno, Atletica, Usuario
 from app.database import ConexaoErro
 
 
@@ -172,9 +179,10 @@ def main():
 
                 # Obter eventos da atlética
                 eventos = run(listar_eventos_atletica(atletica))
+                print(Fore.BLUE + f"{atletica} tem {eventos['data']['total_membros']} membros.")
+                exibir_eventos(eventos)
 
                 # Criar uma lista de opções para o usuário escolher
-                print(Fore.BLUE + f"{atletica} tem {eventos['data']['total_membros']} membros.")
                 opcoes_eventos = [f"{evento['nome']} ({evento['data']})" for evento in eventos['data']['eventos']]
                 opcoes_eventos.append("Voltar ao Menu Principal")
                 

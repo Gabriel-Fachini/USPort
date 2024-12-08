@@ -1,8 +1,7 @@
 from app.schemas import Atletica
 from typing import Dict
 from app.database import get_connection, ConexaoErro
-from asyncio import run
-from colorama import init, Fore, Style
+from colorama import init
 
 # Inicializa o colorama
 init(autoreset=True)

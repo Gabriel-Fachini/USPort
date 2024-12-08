@@ -1,7 +1,7 @@
 from typing import Dict
 from app.database import get_connection, ConexaoErro
 from asyncio import run
-from colorama import init, Fore
+from colorama import init
 
 # Inicializa o colorama
 init(autoreset=True)
@@ -82,8 +82,3 @@ async def listar_estatisticas() -> Dict:
         raise ce
     except Exception as e:
         raise e
-
-if __name__ == "__main__":
-    # Exemplo de uso
-    resultado = run(listar_estatisticas())
-    print(resultado)

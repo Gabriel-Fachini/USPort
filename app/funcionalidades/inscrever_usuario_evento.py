@@ -1,9 +1,6 @@
-from multiprocessing import Value
 from typing import Dict
 from app.database import get_connection, ConexaoErro
-from asyncio import run
-from colorama import init, Fore, Style
-from datetime import date
+from colorama import init
 
 # Inicializa o colorama
 init(autoreset=True)
@@ -49,13 +46,3 @@ async def inscrever_usuario_evento(nome_evento: str, data_evento: str, username:
         raise ce
     except Exception as e:
         raise e
-
-if __name__ == "__main__":
-    try:
-        # Exemplo de uso
-        nome_evento = "Evento Exemplo"
-        username = "user1"
-        resultado = run(inscrever_usuario_evento(nome_evento, username))
-        print(resultado)
-    except Exception as e:
-        print(Fore.RED + f"\nErro ao inscrever usuário no evento: {e}")

@@ -1,6 +1,5 @@
 from typing import Dict
 from app.database import get_connection, ConexaoErro
-from asyncio import run
 from colorama import init, Fore
 
 # Inicializa o colorama
@@ -57,9 +56,3 @@ async def listar_participacoes_comuns(username: str) -> Dict:
     except Exception as e:
         print(Fore.RED + f"Erro ao listar participações comuns: {e}")
         raise e
-
-if __name__ == "__main__":
-    # Exemplo de uso
-    username = "user1"
-    resultado = run(listar_participacoes_comuns(username))
-    print(resultado)
