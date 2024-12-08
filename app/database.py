@@ -15,7 +15,7 @@ Funções:
 
 import psycopg2
 from psycopg2 import DatabaseError
-from config import settings
+from app.config import settings
 
 # Configuração do banco
 DB_CONFIG = {

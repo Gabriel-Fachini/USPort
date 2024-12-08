@@ -1,0 +1,65 @@
+from app.schemas import Usuario
+from typing import Dict
+from app.database import get_connection, ConexaoErro
+from asyncio import run
+from colorama import init, Fore, Style
+
+# Inicializa o colorama
+init(autoreset=True)
+
+async def listar_eventos_atletica(nome_atletica: str) -> Dict:
+  """
+    Lista todos os eventos de uma determinada atlética.
+    
+    Args:
+      nome_atletica (str): Nome da atlética cujos eventos serão listados
+    
+    Returns:
+      Dict: Resposta com status e lista de eventos
+  """
+  try:
+    with get_connection() as connection:
+      with connection.cursor() as cursor:
+          cursor.execute('''
+              SELECT e.nome, e.data, e.data_inicio, e.data_fim, e.descricao, e.arquivo, e.ativo
+              FROM Evento e
+              JOIN Usuario u ON e.username = u.username
+              JOIN Atletica a ON u.username = a.username
+              WHERE a.atletica ILIKE %s;
+          ''', (f'%{nome_atletica}%',))
+          
+          eventos = cursor.fetchall()
+          
+          # Formata os resultados
+          eventos_formatados = []
+          for evento in eventos:
+              eventos_formatados.append({
+                "nome": evento[0],
+                "data": evento[1].strftime("%Y-%m-%d"),
+                "data_inicio": evento[2].strftime("%Y-%m-%d") if evento[2] else None,
+                "data_fim": evento[3].strftime("%Y-%m-%d") if evento[3] else None,
+                "descricao": evento[4],
+                "arquivo": evento[5],
+                "ativo": evento[6]
+              })
+          
+          return {
+              "status": "success",
+              "data": eventos_formatados
+          }
+
+  except ConexaoErro as ce:
+    print(Fore.RED + f"Erro de conexão: {ce}")
+    raise ce
+  except Exception as e:
+    print(Fore.RED + f"Erro ao listar eventos: {e}")
+    raise e
+  except ValueError as e:
+    print(Fore.RED + e)
+    raise e
+
+if __name__ == "__main__":
+  # Exemplo de uso
+  novo_usuario = Usuario(username="user6", nome="Carlos Pereira", email="carlos.pereira@example.com", telefone="(61) 98765-4321", tipo="aluno", num_seguidores=0, num_seguindo=0)
+  resultado = run(listar_eventos_atletica()(novo_usuario))
+  print(resultado)

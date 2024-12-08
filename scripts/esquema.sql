@@ -46,7 +46,7 @@ CREATE TABLE Interacao (
   FOREIGN KEY (username1) REFERENCES Usuario(username) ON DELETE CASCADE,
   FOREIGN KEY (username2) REFERENCES Usuario(username) ON DELETE CASCADE,
   CHECK (username1 <> username2),
-  CHECK (tipo IN ('curtir', 'compartilhar', 'comentar'))
+  CHECK (tipo IN ('curtir', 'compartilhar', 'comentario'))
 );
 
 CREATE TABLE Comentario (
@@ -70,9 +70,8 @@ CREATE TABLE Aluno (
 
 CREATE TABLE Atletica (
   username VARCHAR(50) PRIMARY KEY,
-  nusp INTEGER NOT NULL UNIQUE, -- secondary key
   atletica VARCHAR(50) NOT NULL, -- nome da atlética
-  cnpj VARCHAR(20) NOT NULL UNIQUE, -- tertiary key
+  cnpj VARCHAR(20) NOT NULL UNIQUE, -- secondary key
   razao_social VARCHAR(100) NOT NULL,
   nome_fantasia VARCHAR(100) NOT NULL,
   CONSTRAINT chk_cnpj CHECK (cnpj ~ '^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$'),
@@ -110,10 +109,10 @@ CREATE TABLE Evento (
 CREATE TABLE Participacao (
   username VARCHAR(50) NOT NULL,
   nome_evento VARCHAR(100) NOT NULL,
-  data DATE NOT NULL,
-  PRIMARY KEY (username, nome_evento, data),
+  data_evento DATE NOT NULL,
+  PRIMARY KEY (username, nome_evento, data_evento),
   FOREIGN KEY (username) REFERENCES Usuario(username) ON DELETE CASCADE,
-  FOREIGN KEY (nome_evento, data) REFERENCES Evento(nome, data) ON DELETE CASCADE
+  FOREIGN KEY (nome_evento, data_evento) REFERENCES Evento(nome, data) ON DELETE CASCADE
 );
 
 CREATE TABLE Trofeu (

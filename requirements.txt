@@ -1,7 +1,6 @@
-uvicorn
-pydantic
-pydantic_settings
-pydantic[email]
-colorama
-InquirerPy
-psycopg2
+pydantic # for data validation
+pydantic_settings # for settings management
+pydantic[email] # for email validation
+colorama # for colored output
+InquirerPy # for interactive CLI
+psycopg2 # for PostgreSQL

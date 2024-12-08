@@ -1,6 +1,11 @@
-from schemas import Usuario
+from app.schemas import Usuario
 from typing import Dict
-from database import get_connection, ConexaoErro
+from app.database import get_connection, ConexaoErro
+from asyncio import run
+from colorama import init, Fore, Style
+
+# Inicializa o colorama
+init(autoreset=True)
 
 async def criar_usuario(user: Usuario) -> Dict:
   """
@@ -18,35 +23,41 @@ async def criar_usuario(user: Usuario) -> Dict:
         # Verifica se o username já existe
         cursor.execute("SELECT username FROM Usuario WHERE username = %s", (user.username,))
         if cursor.fetchone():
-            raise ValueError("Username já registrado")
+          raise ValueError("Username já registrado")
         
         # Verifica se o email já existe
         cursor.execute("SELECT email FROM Usuario WHERE email = %s", (user.email,))
         if cursor.fetchone():
-            raise ValueError("Email já registrado")
+          raise ValueError("Email já registrado")
         
         # Insere o novo usuário
         cursor.execute(
-            "INSERT INTO Usuario (username, nome, email, telefone, tipo, num_seguidores, num_seguindo) "
-            "VALUES (%s, %s, %s, %s, %s, %s, %s)",
-            (
-                user.username,
-                user.nome,
-                user.email,
-                user.telefone,
-                user.tipo,
-                user.num_seguidores,
-                user.num_seguindo
-            )
+          "INSERT INTO Usuario (username, nome, email, telefone, tipo, num_seguidores, num_seguindo) "
+          "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+          (
+              user.username,
+              user.nome,
+              user.email,
+              user.telefone,
+              user.tipo,
+              user.num_seguidores,
+              user.num_seguindo
+          )
         )
         connection.commit()
         return {"message": "Usuário criado com sucesso!", "user": user.model_dump()}
   except ValueError as ve:
     # Erros de validação (username ou email já registrados)
-    return {"status": "error", "detail": str(ve)}
+    raise ve
   except ConexaoErro as ce:
     # Erros de conexão
-    return {"status": "error", "detail": ce.detail}
+    raise ce
   except Exception as e:
     # Outros erros
-    return {"status": "error", "detail": f"Erro ao criar usuário: {str(e)}"}
+    raise e
+
+if __name__ == "__main__":
+  # Exemplo de uso
+  novo_usuario = Usuario(username="user6", nome="Carlos Pereira", email="carlos.pereira@example.com", telefone="(61) 98765-4321", tipo="aluno", num_seguidores=0, num_seguindo=0)
+  resultado = run(criar_usuario(novo_usuario))
+  print(resultado)
