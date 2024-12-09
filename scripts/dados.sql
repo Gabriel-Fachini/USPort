@@ -13,11 +13,11 @@ VALUES
 ('user3', 23456789),
 ('user5', 34567890);
 
-INSERT INTO Atletica (username, atletica, cnpj, razao_social, nome_fantasia)
+INSERT INTO Atletica (username, cnpj, razao_social, nome_fantasia)
 VALUES
-('user2', 'Atlética B', '98.765.432/0001-54', 'Atlética B Associação', 'Atlética B'),
-('user5', 'Caaso', '98.777.432/0001-54', 'Caaso USP LTDA', 'Caaso'),
-('user4', 'Atlética D', '43.210.987/0001-65', 'Atlética D Fundação', 'Atlética D');
+('user2', '98.765.432/0001-54', 'Atlética B Associação', 'Atlética B'),
+('user6', '98.777.432/0001-54', 'Caaso USP LTDA', 'Caaso'),
+('user4', '43.210.987/0001-65', 'Atlética D Fundação', 'Atlética D');
 
 INSERT INTO Endereco (username, rua, numero, bairro, cep, complemento)
 VALUES
@@ -62,7 +62,7 @@ VALUES
 
 --
 
-INSERT INTO Membros_Atletica (username1, username2, data_entrada, data_saida, descricao)
+INSERT INTO Membros_Atletica (username1, username2, data_entrada, data_saida)
 VALUES
 ('user1', 'user2', NOW() - INTERVAL '365 days', NULL),
 ('user2', 'user3', NOW() - INTERVAL '180 days', NULL),
@@ -73,7 +73,7 @@ VALUES
 -- Executar estes inserts juntos para não dar problema
 -- daqui até o próximo comentário
 
-INSERT INTO Evento (nome, data, username, descricao, arquivo)
+INSERT INTO Evento (nome, data_evento, username, descricao, arquivo)
 VALUES
 ('Evento A', NOW() - INTERVAL '30 days', 'user1', 'Competição esportiva anual', 'event_a.pdf'),
 ('Evento B', NOW() - INTERVAL '60 days', 'user2', 'Arrecadação de fundos de caridade', 'event_b.jpg'),

@@ -74,7 +74,6 @@ class Aluno(BaseModel):
 
 class Atletica(BaseModel):
     username: str = constr(max_length=50)
-    atletica: str = constr(max_length=50)
     cnpj: str = constr(max_length=20, pattern=r'^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$')
     razao_social: str = constr(max_length=100)
     nome_fantasia: str = constr(max_length=100)

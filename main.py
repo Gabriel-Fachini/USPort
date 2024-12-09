@@ -109,11 +109,6 @@ def main():
                     resposta = run(criar_aluno(aluno))
                 
                 elif tipo == "atletica":
-                    nome_atletica = inquirer.text(
-                        message="Digite o nome da atlética:",
-                        validate=EmptyInputValidator(),
-                    ).execute()
-                    
                     cnpj = inquirer.text(
                         message="Digite o CNPJ: (formato: XX.XXX.XXX/XXXX-XX)",
                         validate=EmptyInputValidator(),
@@ -132,7 +127,6 @@ def main():
                     # Criar instância da atlética
                     atletica = Atletica(
                         username=username,
-                        atletica=nome_atletica,
                         cnpj=cnpj,
                         razao_social=razao_social,
                         nome_fantasia=nome_fantasia

@@ -63,7 +63,6 @@ CREATE TABLE Comentario (
   FOREIGN KEY (username1, username2, data_hora_post, data_hora_interacao) 
     REFERENCES Interacao(username1, username2, data_hora_post, data_hora_interacao) 
     ON DELETE CASCADE, -- Relação com a tabela Interacao
-  CHECK (username1 <> username2) -- Previne que um usuário comente em si mesmo
 );
 
 -- Criação da tabela Aluno
@@ -76,7 +75,6 @@ CREATE TABLE Aluno (
 -- Criação da tabela Atletica
 CREATE TABLE Atletica (
   username VARCHAR(50) PRIMARY KEY, -- Identificador da atlética, chave estrangeira para Usuario
-  atletica VARCHAR(50) NOT NULL, -- Nome da atlética
   cnpj VARCHAR(20) NOT NULL UNIQUE, -- CNPJ único no formato 00.000.000/0000-00
   razao_social VARCHAR(100) NOT NULL, -- Razão social da atlética
   nome_fantasia VARCHAR(100) NOT NULL, -- Nome fantasia da atlética
@@ -97,10 +95,11 @@ CREATE TABLE Membros_Atletica (
   CONSTRAINT chk_data_saida CHECK (data_saida IS NULL OR data_entrada < data_saida) -- Valida a sequência das datas
 );
 
+-- Executar este bloco junto 
 -- Criação da tabela Evento
 CREATE TABLE Evento (
   nome VARCHAR(100) NOT NULL, -- Nome do evento
-  data DATE NOT NULL, -- Data de criação do evento no banco de dados
+  data_evento DATE NOT NULL, -- Data de criação do evento no banco de dados
   username VARCHAR(50) NOT NULL, -- Identificador do criador do evento, chave estrangeira para Usuario
   data_inicio DATE, -- Data de início do evento (opcional)
   data_fim DATE, -- Data de término do evento (opcional)
@@ -161,6 +160,8 @@ CREATE TABLE Selo (
     ON DELETE CASCADE, -- Relação com a tabela Atividade
   CHECK (data_selo >= data_evento) -- Valida que data_selo seja posterior ou igual a data_evento
 );
+
+-- Executar este bloco junto até aqui
 
 -- Criação da tabela Post
 CREATE TABLE Post (
