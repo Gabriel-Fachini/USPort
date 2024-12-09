@@ -106,11 +106,10 @@ CREATE TABLE Evento (
   descricao TEXT NOT NULL, -- Descrição detalhada do evento
   arquivo VARCHAR(200), -- Link para arquivo relacionado ao evento (opcional)
   ativo BOOLEAN DEFAULT FALSE, -- Status do evento: ativo ou inativo
-  PRIMARY KEY (nome, data), -- Chave primária composta
+  PRIMARY KEY (nome, data_evento), -- Chave primária composta
   FOREIGN KEY (username) REFERENCES Usuario(username) ON DELETE CASCADE, -- Relação com a tabela Usuario
   CONSTRAINT chk_data_fim CHECK (data_fim IS NULL OR data_inicio <= data_fim), -- Valida que data_fim seja posterior a data_inicio
-  CONSTRAINT chk_data_inicio CHECK (data_inicio IS NULL OR data_inicio >= data), -- Valida que data_inicio seja posterior ou igual à data de criação
-  CONSTRAINT chk_ativo CHECK (ativo IN (FALSE, TRUE)) -- Garante que o status seja verdadeiro ou falso
+  CONSTRAINT chk_data_inicio CHECK (data_inicio IS NULL OR data_inicio >= data_evento), -- Valida que data_inicio seja posterior ou igual à data de criação
 );
 
 -- Criação da tabela Participacao
@@ -120,7 +119,7 @@ CREATE TABLE Participacao (
   data_evento DATE NOT NULL, -- Data do evento, parte da chave estrangeira composta para Evento
   PRIMARY KEY (username, nome_evento, data_evento), -- Chave primária composta
   FOREIGN KEY (username) REFERENCES Usuario(username) ON DELETE CASCADE, -- Relação com a tabela Usuario
-  FOREIGN KEY (nome_evento, data_evento) REFERENCES Evento(nome, data) ON DELETE CASCADE -- Relação composta com a tabela Evento
+  FOREIGN KEY (nome_evento, data_evento) REFERENCES Evento(nome, data_evento) ON DELETE CASCADE -- Relação composta com a tabela Evento
 );
 
 -- Criação da tabela Trofeu
@@ -131,7 +130,7 @@ CREATE TABLE Trofeu (
   nome_trofeu VARCHAR(100) NOT NULL, -- Nome do troféu
   icone VARCHAR(200) NOT NULL, -- Link para o ícone do troféu
   PRIMARY KEY (nome_evento, data_evento, data_trofeu), -- Chave primária composta
-  FOREIGN KEY (nome_evento, data_evento) REFERENCES Evento(nome, data) ON DELETE CASCADE, -- Relação com a tabela Evento
+  FOREIGN KEY (nome_evento, data_evento) REFERENCES Evento(nome, data_evento) ON DELETE CASCADE, -- Relação com a tabela Evento
   CHECK (data_trofeu >= data_evento) -- Valida que data_trofeu seja posterior ou igual a data_evento
 );
 
@@ -144,7 +143,7 @@ CREATE TABLE Atividade (
   esporte VARCHAR(50) NOT NULL, -- Esporte relacionado à atividade
   arquivo VARCHAR(200), -- Link para arquivo relacionado à atividade (opcional)
   PRIMARY KEY (nome_evento, data_evento, nome_atividade), -- Chave primária composta
-  FOREIGN KEY (nome_evento, data_evento) REFERENCES Evento(nome, data) ON DELETE CASCADE -- Relação com a tabela Evento
+  FOREIGN KEY (nome_evento, data_evento) REFERENCES Evento(nome, data_evento) ON DELETE CASCADE -- Relação com a tabela Evento
 );
 
 -- Criação da tabela Selo

@@ -82,6 +82,11 @@ VALUES
 ('Evento E', NOW() - INTERVAL '150 days', 'user5', 'Evento social do clube', 'event_e.mp4'),
 ('Evento D', NOW() + INTERVAL '120 days', 'user6', 'Campeonato de handball na quadra', 'event_d.zip'),
 ('Evento D', NOW() + INTERVAL '90 days', 'user6', 'Comemoração da vitória do caaso tusca na piscina', 'event_d.zip');
+-- Considerando campos nulos
+INSERT INTO Evento (nome, data_evento, username, data_inicio, data_fim, descricao, arquivo, ativo)
+VALUES
+('Evento F', NOW() - INTERVAL '180 days', 'user7', NOW() - INTERVAL '179 days', NOW() - INTERVAL '178 days', 'Torneio de futebol', 'event_f.pdf', TRUE),
+('Evento G', NOW() - INTERVAL '210 days', 'user8', NOW() - INTERVAL '209 days', NOW() - INTERVAL '208 days', 'Feira de ciências', 'event_g.jpg', FALSE);
 
 INSERT INTO Participacao (username, nome_evento, data_evento)
 VALUES
